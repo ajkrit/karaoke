@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets.dart';
 import 'styles.dart';
+import 'profilepage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,25 +17,48 @@ class _HomePageState extends State<HomePage> {
         child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 100.0, bottom: 100.0),
+                padding: const EdgeInsets.symmetric(vertical: 100.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle button 1 press
-                        print('Button 1 pressed');
-                      },
-                      child: Text('Button 1'),
+                  ElevatedButton(
+                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));},
+                    style: ElevatedButton.styleFrom(
+                      elevation: 8,
+                      shape: const CircleBorder(),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle button 2 press
-                        print('Button 2 pressed');
-                      },
-                      child: Text('Button 2'),
+                    child: Container(
+                      width: 120.0,
+                      height: 120.0,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.whiteColor,
+                      ),
+                      child: Center(
+                        child: Image.asset('images/account-large.png'),
+                      ),
                     ),
-                  ],
+                  ),
+                    const SizedBox(width: 20.0), // Adjust the width as needed for the desired spacing
+                    ElevatedButton(
+                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));},
+                    style: ElevatedButton.styleFrom(
+                      elevation: 8,
+                      shape: const CircleBorder(),
+                    ),
+                    child: Container(
+                      width: 120.0,
+                      height: 120.0,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.whiteColor,
+                      ),
+                      child: Center(
+                        child: Image.asset('images/settings-large.png'),
+                      ),
+                    ),
+                  )
+                ],
                 ),
               ),
               const Text(
@@ -57,10 +81,10 @@ class _HomePageState extends State<HomePage> {
                         mainAxisSpacing: 20
                     ),
                     children: [
-                      SquareButton(onPressed: ()  {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel.png', label: 'Song of Day'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel.png', label: 'Songs'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel.png', label: 'Favorites'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel.png', label: 'Challenge')
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/cup.png', label: 'Song of Day'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/mic.png', label: 'Songs'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/favorites.png', label: 'Favorites'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel-large.png', label: 'Challenge')
                     ],
                   ),
                 )
@@ -68,7 +92,6 @@ class _HomePageState extends State<HomePage> {
             ]
         ),
       ),
-      bottomNavigationBar: MyAppBar(),
     );
   }
 }

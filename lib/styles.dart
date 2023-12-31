@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+List<String> handshakePhrases = [
+  "Compete with integrity, finish with a handshake.",
+  "Fair play is our foundation—seal it with a handshake.",
+  "Play hard, play fair, and extend a handshake in the end.",
+  "In the game of life, fair play prevails. Conclude with a handshake.",
+  "Compete fiercely, but remember the handshake of respect.",
+  "True champions embody fair play. Seal your victories with a handshake.",
+  "Every competition deserves fair play and a final handshake.",
+  "Victory is sweetest when earned with fair play. End it with a handshake.",
+  "Compete with honor, end with a handshake of sportsmanship.",
+  "The essence of fair play—complete it with a handshake.",
+];
+
 class AppColors {
   static const Color backgroundColor = Color(0xFFFDFBB9);
   static const Color mainColor = Color(0xFFD06ECC);
