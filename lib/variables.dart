@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 List<String> handshakePhrases = [
   "Compete with integrity, finish with a handshake.",
   "Fair play is our foundation—seal it with a handshake.",
@@ -38,7 +39,7 @@ class AppStyles {
     fontFamily: 'Inter',
     fontSize: 32.0,
     fontWeight: FontWeight.bold,
-    color: Colors.black,
+    color: AppColors.mainColor,
   );
 
   static const TextStyle purpleBoxText = TextStyle(
@@ -59,7 +60,7 @@ class AppStyles {
     fontFamily: 'Inter',
     fontSize: 12.0,
     fontWeight: FontWeight.bold,
-    color: Colors.black,
+    color: Colors.grey,
   );
 
   static const TextStyle backgroundText = TextStyle(

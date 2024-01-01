@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'styles.dart';
+import 'variables.dart';
 import 'profilepage.dart';
+import 'homepage.dart';
+import 'settingspage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -18,21 +21,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             icon: Image.asset('images/back.png'),
-            onPressed: () {
-              // Handle search button press
-            },
+            onPressed: () {Navigator.pop(context);},
           ),
           IconButton(
             icon: Image.asset('images/homepage.png'),
-            onPressed: () {
-              // Handle settings button press
-            },
+            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));},
           ),
           IconButton(
             icon: Image.asset('images/settings.png'),
-            onPressed: () {
-              // Handle profile button press
-            },
+            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));},
           ),
         ],
       ),
@@ -201,5 +198,48 @@ class _ListItemState extends State<ListItem> {
     _titleController.dispose();
     _subtitleController.dispose();
     super.dispose();
+  }
+}
+
+class SettingsSwitch extends StatefulWidget {
+  @override
+  _SettingsSwitchState createState() => _SettingsSwitchState();
+}
+
+class _SettingsSwitchState extends State<SettingsSwitch> {
+  bool switchValue = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Switch Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Enable Feature:',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            Switch(
+              value: switchValue,
+              onChanged: (value) {
+                setState(() {
+                  switchValue = value;
+                });
+                // Handle the switch toggle event
+                // You can perform actions based on the switch state
+              },
+            ),
+            Text(
+              switchValue ? 'Feature Enabled' : 'Feature Disabled',
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'widgets.dart';
-import 'styles.dart';
+import 'variables.dart';
 import 'profilepage.dart';
+import 'settingspage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                     const SizedBox(width: 20.0), // Adjust the width as needed for the desired spacing
                     ElevatedButton(
-                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));},
+                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));},
                     style: ElevatedButton.styleFrom(
                       elevation: 8,
                       shape: const CircleBorder(),
