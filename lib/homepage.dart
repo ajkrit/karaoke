@@ -3,6 +3,8 @@ import 'widgets.dart';
 import 'variables.dart';
 import 'profilepage.dart';
 import 'settingspage.dart';
+import 'songofdaypage.dart';
+import 'genrepage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,10 +86,10 @@ class _HomePageState extends State<HomePage> {
                         mainAxisSpacing: 20
                     ),
                     children: [
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));}, icon: 'images/cup.png', label: 'Song of Day'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));}, icon: 'images/mic.png', label: 'Songs'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));}, icon: 'images/favorites.png', label: 'Favorites'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));}, icon: 'images/duel-large.png', label: 'Challenge')
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SongOfDayPage()));}, icon: 'images/cup.png', label: 'Song of Day'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => GenrePage()));}, icon: 'images/mic.png', label: 'Songs'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/favorites.png', label: 'Favorites'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/duel-large.png', label: 'Challenge')
                     ],
                   ),
                 )

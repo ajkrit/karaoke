@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String username = '';
   String email = '';
+  double score = 0.0;
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loadedUsername = prefs.getString('username') ?? '';
     String loadedEmail = prefs.getString('email') ?? '';
+    double loadedScore = prefs.getDouble('score') ?? 0.0;
 
     if (loadedUsername.isNotEmpty) {
       setState(() {
@@ -41,12 +43,17 @@ class _ProfilePageState extends State<ProfilePage> {
       });
       _emailController.text = email;
     }
+
+    setState(() {
+      score = loadedScore;
+    });
   }
 
   Future<void> _saveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setString('email', email);
+
   }
 
   @override
@@ -75,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const Text('Profile', style: AppStyles.backgroundText),
+            SizedBox(height: 30.0),
             Column(
               children: [
                 Padding(
@@ -113,8 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
@@ -154,17 +161,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         textAlign: TextAlign.center,
                         'Your average score is:',
                         style: AppStyles.scoreText,
                       ),
                       SizedBox(height: 8.0),
                       Text(
-                        '83.6%',
+                        '$score %',
                         textAlign: TextAlign.center,
                         style: AppStyles.scorePoints,
                       )
