@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets.dart';
 import 'variables.dart';
-import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -11,7 +11,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool switchValue = false;
+  bool _sounds = false;
+  bool _notifications = false;
+
+  void loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _sounds = (prefs.getBool('sounds') ?? true);
+      _notifications = (prefs.getBool('notifications') ?? true);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadSettings();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 100.0, bottom: 50.0),
+              padding: const EdgeInsets.only(top: 100.0, bottom: 50.0),
               child: Material(
                 elevation: 8,
                 shape: const CircleBorder(),
@@ -42,49 +57,23 @@ class _SettingsPageState extends State<SettingsPage> {
               'Settings',
               style: AppStyles.backgroundText,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-              child: Container(
-                  padding: EdgeInsets.only(left: 10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: AppColors.whiteColor,
-                  ),
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Sounds',
-                          style: AppStyles.listText,
-                        ),
-                        Text(
-                            'Enables all sounds.',
-                            style: AppStyles.listDesc
-                        )
-                      ]
-                    ),
-                    SizedBox(width: 170.0),
-                    Switch(
-                      activeColor: AppColors.mainColor,
-                      value: switchValue,
-                      onChanged: (value) {
-                        setState(() {
-                          switchValue = value;
-                        });
-                        // Handle the switch toggle event
-                        // You can perform actions based on the switch state
-                      },
-                    ),
-                  ],
-                )
-              ),
+            const SizedBox(height: 15.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+              child: SwitchContainer(title: 'Sounds', description: 'Enables all sounds.', switchVal: 'sounds')
             ),
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+                child: SwitchContainer(title: 'Notifications', description: 'Enables notifications.', switchVal: 'notifications')
+            ),
+            Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+                child: DropDownContainer(title: 'Pitch', description: 'Change pitch.', switchVal: 'pitch', dropdownItems: pitchList,)
+            )
           ],
         ),
       ),
-      bottomNavigationBar: MyAppBar(),
+      bottomNavigationBar: const MyAppBar(),
     );
   }
 }

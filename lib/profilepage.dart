@@ -3,6 +3,8 @@ import 'widgets.dart';
 import 'variables.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -20,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 100.0, bottom: 50.0),
+                  padding: const EdgeInsets.only(top: 100.0, bottom: 50.0),
                   child: Material(
                       elevation: 8,
                       shape: const CircleBorder(),
@@ -57,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               controller: _textController,
                               textAlign: TextAlign.left, // Align the text to the left
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(16.0), // Add padding inside the TextField
+                                contentPadding: const EdgeInsets.all(16.0), // Add padding inside the TextField
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -90,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               controller: _textController,
                               textAlign: TextAlign.left, // Align the text to the left
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(16.0), // Add padding inside the TextField
+                                contentPadding: const EdgeInsets.all(16.0), // Add padding inside the TextField
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -109,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Container(
                       width: 150.0, // Adjust width as needed
                       height: 150.0, // Adjust height as needed
@@ -141,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ]
             )
         ),
-      bottomNavigationBar: MyAppBar(),
+      bottomNavigationBar: const MyAppBar(),
     );
   }
 }

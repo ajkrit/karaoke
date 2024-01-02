@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+List<String> pitchList = [
+  'Default', 'C', 'D', 'E'
+];
 
 List<String> handshakePhrases = [
   "Compete with integrity, finish with a handshake.",

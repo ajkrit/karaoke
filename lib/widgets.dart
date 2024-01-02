@@ -6,6 +6,8 @@ import 'settingspage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const MyAppBar({super.key});
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -17,7 +19,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           IconButton(
             icon: Image.asset('images/account-user.png'),
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));}
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));}
           ),
           IconButton(
             icon: Image.asset('images/back.png'),
@@ -25,11 +27,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             icon: Image.asset('images/homepage.png'),
-            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));},
+            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));},
           ),
           IconButton(
             icon: Image.asset('images/settings.png'),
-            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));},
+            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));},
           ),
         ],
       ),
@@ -41,7 +43,7 @@ class CircularButton extends StatefulWidget {
   final VoidCallback onPressed;
   final String icon;
 
-  CircularButton({
+  const CircularButton({super.key, 
     required this.onPressed,
     required this.icon,
   });
@@ -59,7 +61,7 @@ class _CircularButtonState extends State<CircularButton> {
       onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
         elevation: isPressed ? 0 : 8,
-        fixedSize: Size(10, 10),
+        fixedSize: const Size(10, 10),
         backgroundColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.0),
@@ -80,7 +82,7 @@ class SquareButton extends StatefulWidget {
   final String icon;
   final String label;
 
-  SquareButton({
+  const SquareButton({super.key, 
     required this.onPressed,
     required this.icon,
     required this.label,
@@ -100,7 +102,7 @@ class _SquareButtonState extends State<SquareButton> {
       onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
         elevation: isPressed ? 0 : 8,
-        fixedSize: Size(10, 10),
+        fixedSize: const Size(10, 10),
         backgroundColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -110,7 +112,7 @@ class _SquareButtonState extends State<SquareButton> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 14.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 14.0),
             child: Image.asset(
               widget.icon,
               scale: 0.5,
@@ -118,7 +120,7 @@ class _SquareButtonState extends State<SquareButton> {
               height: 100.0, // Adjust height as needed
             ),
           ),
-          SizedBox(width: 15.0), // Add spacing between icon and text
+          const SizedBox(width: 15.0), // Add spacing between icon and text
           Text(
             widget.label,
             style: AppStyles.mainButtonText
@@ -136,7 +138,7 @@ class ListItem extends StatefulWidget {
   final String icon;
   final VoidCallback onPressed;
 
-  ListItem({
+  const ListItem({super.key, 
     required this.text,
     required this.desc,
     required this.icon,
@@ -148,8 +150,8 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _subtitleController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _subtitleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +172,7 @@ class _ListItemState extends State<ListItem> {
                     controller: _titleController,
                     style: AppStyles.listText,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _subtitleController,
                     style: AppStyles.listDesc,
@@ -201,44 +203,166 @@ class _ListItemState extends State<ListItem> {
   }
 }
 
-class SettingsSwitch extends StatefulWidget {
+
+class SwitchContainer extends StatefulWidget {
+  final String title;
+  final String description;
+  final String switchVal;
+
+  const SwitchContainer({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.switchVal,
+  }) : super(key: key);
+
   @override
-  _SettingsSwitchState createState() => _SettingsSwitchState();
+  _SwitchContainerState createState() => _SwitchContainerState();
 }
 
-class _SettingsSwitchState extends State<SettingsSwitch> {
-  bool switchValue = false;
+class _SwitchContainerState extends State<SwitchContainer> {
+  late bool switchValue = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSwitchValue();
+  }
+
+  Future<void> _loadSwitchValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      switchValue = prefs.getBool(widget.switchVal) ?? true;
+    });
+  }
+
+  Future<void> _saveSwitchValue(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(widget.switchVal, value);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Switch Example'),
+    return Container(
+      padding: const EdgeInsets.only(left: 10.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.white,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Enable Feature:',
-              style: TextStyle(fontSize: 18.0),
-            ),
-            Switch(
-              value: switchValue,
-              onChanged: (value) {
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.description,
+                style: const TextStyle(fontSize: 14.0),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Switch(
+            activeColor: AppColors.mainColor,
+            value: switchValue,
+            onChanged: (value) {
+              setState(() {
+                switchValue = value;
+              });
+              _saveSwitchValue(value);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class DropDownContainer extends StatefulWidget {
+  final String title;
+  final String description;
+  final String switchVal;
+  final List<String> dropdownItems;
+
+  const DropDownContainer({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.switchVal,
+    required this.dropdownItems,
+  }) : super(key: key);
+
+  @override
+  _DropDownContainerState createState() => _DropDownContainerState();
+}
+
+class _DropDownContainerState extends State<DropDownContainer> {
+  late String selectedItem = pitchList.first;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedItem();
+  }
+
+  Future<void> _loadSelectedItem() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedItem = prefs.getString(widget.switchVal) ?? widget.dropdownItems.first;
+    });
+  }
+
+  Future<void> _saveSelectedItem(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(widget.switchVal, value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 10.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.white,
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                widget.description,
+                style: const TextStyle(fontSize: 14.0),
+              ),
+            ],
+          ),
+          const Spacer(),
+          DropdownButton<String>(
+            value: selectedItem,
+            items: widget.dropdownItems.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(item),
+              );
+            }).toList(),
+            onChanged: (String? value) {
+              if (value != null) {
                 setState(() {
-                  switchValue = value;
+                  selectedItem = value;
                 });
-                // Handle the switch toggle event
-                // You can perform actions based on the switch state
-              },
-            ),
-            Text(
-              switchValue ? 'Feature Enabled' : 'Feature Disabled',
-              style: TextStyle(fontSize: 16.0),
-            ),
-          ],
-        ),
+                _saveSelectedItem(value);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
