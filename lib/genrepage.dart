@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'widgets.dart';
 import 'variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'homepage.dart';
 
 class GenrePage extends StatefulWidget {
   const GenrePage({Key? key}) : super(key: key);
@@ -39,7 +40,14 @@ class _GenrePageState extends State<GenrePage> {
                       height: 150.0,
                       width: 150.0,
                       child: SquareButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                              builder: (context) => HomePage()
+                              )
+                          );
+                        },
                         icon: 'images/The Band Torso.png',
                         label: 'Rock',
                       ),

@@ -5,6 +5,7 @@ import 'homepage.dart';
 import 'settingspage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
 
@@ -18,7 +19,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            icon: Image.asset('images/account-user.png'),
+              icon: Image.asset('images/account-user.png'),
               onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()));}
           ),
           IconButton(
@@ -43,7 +44,7 @@ class CircularButton extends StatefulWidget {
   final VoidCallback onPressed;
   final String icon;
 
-  const CircularButton({super.key, 
+  const CircularButton({super.key,
     required this.onPressed,
     required this.icon,
   });
@@ -82,7 +83,7 @@ class SquareButton extends StatefulWidget {
   final String icon;
   final String label;
 
-  const SquareButton({super.key, 
+  const SquareButton({super.key,
     required this.onPressed,
     required this.icon,
     required this.label,
@@ -122,8 +123,8 @@ class _SquareButtonState extends State<SquareButton> {
           ),
           const SizedBox(width: 15.0), // Add spacing between icon and text
           Text(
-            widget.label,
-            style: AppStyles.mainButtonText
+              widget.label,
+              style: AppStyles.mainButtonText
           ),
         ],
       ),
@@ -138,7 +139,7 @@ class ListItem extends StatefulWidget {
   final String icon;
   final VoidCallback onPressed;
 
-  const ListItem({super.key, 
+  const ListItem({super.key,
     required this.text,
     required this.desc,
     required this.icon,
@@ -150,56 +151,44 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _subtitleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+        child:
+        Container(
+            padding: const EdgeInsets.only(left: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.white,
+            ),
+            child: Row(
                 children: [
-                  TextField(
-                    controller: _titleController,
-                    style: AppStyles.listText,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.text,
+                        style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        widget.desc,
+                        style: const TextStyle(fontSize: 14.0),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _subtitleController,
-                    style: AppStyles.listDesc,
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Handle button press
-                print('Button pressed');
-                print('Title: ${_titleController.text}');
-                print('Subtitle: ${_subtitleController.text}');
-              },
-              child: Image.asset(widget.icon),
-            ),
-          ],
-        ),
-      ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                    },
+                    icon: Image.asset(widget.icon),
+                  )
+                ]
+            )
+        )
     );
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _subtitleController.dispose();
-    super.dispose();
   }
 }
 
