@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets.dart';
 import 'variables.dart';
-import 'homepage.dart';
 import 'songspage.dart';
 
 class GenrePage extends StatefulWidget {
@@ -31,29 +30,28 @@ class _GenrePageState extends State<GenrePage> {
             ),
             Container(
               height: 200.0,
-              child: Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: greekGenres.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                      child: Container(
-                        height: 150.0,
-                        width: 150.0,
-                        child: SquareButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                  SongsPage(
-                                      language: 'Greek', genre: greekGenres[index])));},
-                                      icon: greekGenreIcons[index],
-                                      label: greekGenres[index]),
-                      ),
-                    );
-                  },
-                ),
-              )
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: greekGenres.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                    child: Container(
+                      height: 150.0,
+                      width: 150.0,
+                      child: SquareButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                SongsPage(
+                                    language: 'Greek', genre: greekGenres[index])));},
+                          icon: greekGenreIcons[index],
+                          label: greekGenres[index]),
+                    ),
+                  );
+                },
+              ),
+
             ),
             SizedBox(height: 50.0),
             const Text(
@@ -61,30 +59,28 @@ class _GenrePageState extends State<GenrePage> {
               style: AppStyles.backgroundText,
             ),
             Container(
-                height: 200.0,
-                child: Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: englishGenres.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                        child: Container(
-                          height: 150.0,
-                          width: 150.0,
-                          child: SquareButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                    SongsPage(
-                                        language: 'English', genre: englishGenres[index])));},
-                              icon: englishGenreIcons[index],
-                              label: englishGenres[index]),
-                        ),
-                      );
-                    },
-                  ),
-                )
+              height: 200.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: englishGenres.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                    child: Container(
+                      height: 150.0,
+                      width: 150.0,
+                      child: SquareButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                SongsPage(
+                                    language: 'English', genre: englishGenres[index])));},
+                          icon: englishGenreIcons[index],
+                          label: englishGenres[index]),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

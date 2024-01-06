@@ -40,7 +40,6 @@ class _SongOfDayPageState extends State<SongOfDayPage> {
   Future<void> _initData() async {
     try {
       _songs = await fetchSongs(id: '0', language: '', genre: '');
-      print('Songs loaded successfully: $_songs');
       setState(() {
         _random = _generate(_songs.length);
         _opacity = 1;
@@ -54,78 +53,87 @@ class _SongOfDayPageState extends State<SongOfDayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 80.0),
-            Image.asset('images/The Band Band.png'),
-            const Text(
-              'Scratch to reveal today\'s pick',
-              style: AppStyles.backgroundText,
-            ),
-            const SizedBox(height: 30.0),
-            Container(
-              height: 300,
-              width: 300,
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(20),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 80.0),
+              Image.asset('images/The Band Band.png'),
+              const Text(
+                'Scratch to reveal today\'s pick',
+                style: AppStyles.backgroundText,
               ),
-              alignment: Alignment.center,
-              child: Scratcher(
-                color: AppColors.mainColor,
-                accuracy: ScratchAccuracy.low,
-                threshold: 0,
-                brushSize: 40,
-                onThreshold: () {
-                  setState(() {
-                    _opacity = 1;
-                  });
-                },
-                child: AnimatedOpacity(
-                  duration: Duration(),
-                  opacity: _opacity,
-                  child: Container(
+              const SizedBox(height: 60.0),
+              Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                alignment: Alignment.center,
+                child: Scratcher(
+                  color: AppColors.mainColor,
+                  accuracy: ScratchAccuracy.low,
+                  threshold: 0,
+                  brushSize: 40,
+                  onThreshold: () {
+                    setState(() {
+                      _opacity = 1;
+                    });
+                  },
+                  child: AnimatedOpacity(
+                    duration: Duration(),
+                    opacity: _opacity,
+                    child: Container(
                       alignment: Alignment.center,
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'The song of the day is:',
-                              style: AppStyles.dailySongText,
-                            ),
-                            SizedBox(height: 20.0),
-                            Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 40.0),
+                          const Text(
+                            'The song of the day is:',
+                            style: AppStyles.dailySongText,
+                          ),
+                          SizedBox(height: 40.0),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(width: 10.0),
+                                Spacer(),
                                 Image.asset('images/The Band Standing Microphone.png'),
-                                Column(
-                                    children: [
-                                      Text(
-                                        _songs.isEmpty ? "Loading..." : _songs[_random].title,
-                                        style: AppStyles.listText,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      Text(
-                                        _songs.isEmpty ? "Loading..." : _songs[_random].artist,
-                                        style: AppStyles.listDesc,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ]
-                                ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _songs.isEmpty ? "Loading..." : _songs[_random].title,
+                                          style: AppStyles.listText,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                        Text(
+                                          _songs.isEmpty ? "Loading..." : _songs[_random].artist,
+                                          style: AppStyles.listDesc,
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 Spacer(),
                                 IconButton(onPressed: () {}, icon: Image.asset('images/play-gold.png')),
-                                SizedBox(width: 10.0)
                               ],
-                            )
-                          ]
-                      )
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const MyAppBar(),
