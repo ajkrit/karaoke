@@ -4,7 +4,7 @@ import 'variables.dart';
 import 'profilepage.dart';
 import 'settingspage.dart';
 import 'songofdaypage.dart';
-//import 'genrepage.dart';
+import 'genrepage.dart';
 import 'challengepage.dart';
 import 'songspage.dart';
 
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     children: [
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SongOfDayPage()));}, icon: 'images/cup.png', label: 'Song of Day'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SongsPage(language: 'Greek', genre: 'Laiko')));}, icon: 'images/mic.png', label: 'Songs'),
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => GenrePage()));}, icon: 'images/mic.png', label: 'Songs'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));}, icon: 'images/favorites.png', label: 'Favorites'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengePage()));}, icon: 'images/duel-large.png', label: 'Challenge')
                     ],

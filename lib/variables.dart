@@ -1,5 +1,29 @@
 import 'package:flutter/material.dart';
 
+List<String> greekGenres = [
+  'Rock', 'Entechno', 'Rembetiko', 'Laiko'
+];
+
+List<String> englishGenres = [
+  'Rock', 'Pop', 'Party', 'Disney'
+];
+
+List<String> greekGenreIcons = [
+  'images/The Band Torso-1.png',
+  'images/The Band Torso-4.png',
+  'images/The Band Torso-3.png',
+  'images/The Band Torso-2.png',
+  'images/The Band Torso-5.png'
+];
+
+List<String> englishGenreIcons = [
+  'images/The Band Torso-5.png',
+  'images/The Band Torso-1.png',
+  'images/The Band Torso-2.png',
+  'images/The Band Torso-4.png',
+  'images/The Band Torso-3.png'
+];
+
 List<String> pitchList = [
   'Default', 'C', 'D', 'E'
 ];
