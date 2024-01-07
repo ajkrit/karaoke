@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:karaoke/widgets.dart';
 import 'variables.dart';
 import 'homepage.dart';
+import 'dart:async';
 
 
 class Lyric {
@@ -22,7 +23,7 @@ List<Lyric> parseLRC(String lrcText) {
   lrcText = lrcText.trim();
 
   // Regular expression to match timestamp and lyrics
-  RegExp regex = RegExp(r'\[(\d+):(\d+\.\d+)\]"?(.*?)"?');
+  RegExp regex = RegExp(r'^"?\[(\d+):(\d+\.\d+)\]"?(.*?)"?$');
 
   for (String line in lrcText.split('\n')) {
     // Try to match the line with the regular expression
@@ -80,6 +81,7 @@ class _PlayPageState extends State<PlayPage> {
   late String _durationText;
   late int _currentLine;
 
+  Timer? _timer;
   List<Lyric> _lyrics = [];
   String mp3Url = '';
   bool _isPlaying = false;
@@ -88,14 +90,17 @@ class _PlayPageState extends State<PlayPage> {
   Duration _duration = Duration();
   Duration _position = Duration();
 
-  int getCurrentLine() {
-    for (int i = 0; i < _lyrics.length - 1; i++) {
-      if (_position.inMilliseconds >= _lyrics[i].timestamp.inMilliseconds &&
-          _position.inMilliseconds < _lyrics[i + 1].timestamp.inMilliseconds) {
-        return i;
+  void _startTimer() {
+    const Duration checkInterval = Duration(milliseconds: 50);
+
+    _timer = Timer.periodic(checkInterval, (timer) {
+      if (_position >= _lyrics[_currentLine].timestamp) {
+        setState(() {
+          _currentLine += 1;
+        });
+        //print('Current Line: $_currentLine, Timestamp: ${_lyrics[_currentLine].timestamp}, Lyric: ${_lyrics[_currentLine].text}');
       }
-    }
-    return _lyrics.length - 1;
+    });
   }
 
   @override
@@ -122,13 +127,6 @@ class _PlayPageState extends State<PlayPage> {
         _position = position;
         _positionText = _formatDuration(position);
       });
-
-      int newCurrentLine = getCurrentLine();
-      if (newCurrentLine != _currentLine) {
-        setState(() {
-          _currentLine = newCurrentLine;
-        });
-      }
     });
 
     _audioPlayer.onPlayerComplete.listen((event) {
@@ -139,10 +137,13 @@ class _PlayPageState extends State<PlayPage> {
     });
 
     _audioPlayer.play(_audioUrl);
+
+    _startTimer();
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -172,25 +173,34 @@ class _PlayPageState extends State<PlayPage> {
             ],
           ),
           Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
               itemCount: _lyrics.length,
-              separatorBuilder: (context, index) => Divider(),
               itemBuilder: (context, index) {
-                bool isCurrentLine = index == _currentLine;
+                bool isCurrentLine = (index + 1) == _currentLine;
 
-                return ListTile(
-                  title: Text(
-                    _lyrics[index].text,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: isCurrentLine
-                          ? AppColors.mainColor
-                          : Colors.white,
-                      fontWeight: isCurrentLine
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text(
+                        _lyrics[index].text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isCurrentLine ? 18.0 : 16.0,
+                          color: isCurrentLine
+                              ? AppColors.mainColor
+                              : Colors.white,
+                          fontWeight: isCurrentLine
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (isCurrentLine)
+                      Divider(
+                        height: 0,
+                        thickness: 0,
+                      ),
+                  ],
                 );
               },
             ),
@@ -198,7 +208,7 @@ class _PlayPageState extends State<PlayPage> {
           Slider(
             activeColor: AppColors.mainColor,
             inactiveColor: Colors.purple[50],
-            value: _position.inMilliseconds.toDouble(),
+            value: _position.inMilliseconds.toDouble().clamp(0.0, _duration.inMilliseconds.toDouble()),
             min: 0.0,
             max: _duration.inMilliseconds.toDouble(),
             onChanged: (double value) {
@@ -208,9 +218,9 @@ class _PlayPageState extends State<PlayPage> {
           Row(
             children: [
               SizedBox(width: 25.0),
-              Text(_positionText ?? '0:00', style: AppStyles.listText),
+              Text(_positionText, style: AppStyles.listText),
               Spacer(),
-              Text(_durationText ?? '0:00', style: AppStyles.listText),
+              Text(_durationText, style: AppStyles.listText),
               SizedBox(width: 25.0),
             ],
           ),
@@ -236,7 +246,8 @@ class _PlayPageState extends State<PlayPage> {
               _finished ? 'images/ok.png' : (_isPlaying ? 'images/pause.png' : 'images/play.png'),
               scale: 0.5,
             ),
-          )
+          ),
+          SizedBox(height: 20.0)
         ],
       ),
     );
