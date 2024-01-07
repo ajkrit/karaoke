@@ -3,45 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'widgets.dart';
 import 'variables.dart';
-import 'homepage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class Song {
-  final int id;
-  final String title;
-  final String artist;
-
-  Song({
-    required this.id,
-    required this.title,
-    required this.artist,
-  });
-
-  factory Song.fromJson(Map<String, dynamic> json) {
-    return Song(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      artist: json['artist'] as String,
-    );
-  }
-}
-
-Future<List<Song>> fetchSongs({String? id, String? language, String? genre}) async {
-  try {
-    final response = await http.get(Uri.parse(
-        'http://192.168.1.245:5000/api/getSongs?id=$id&language=$language&genre=$genre'));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      final List<Song> songs = data.map((item) => Song.fromJson(item)).toList();
-      return songs;
-    } else {
-      throw Exception('Failed to load data. Status Code: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Error fetching songs: $e');
-    return [];
-  }
-}
+import 'playpage.dart';
 
 
 class SongsPage extends StatefulWidget {
@@ -108,7 +70,16 @@ class _SongsPageState extends State<SongsPage> {
                   text: _songs[index].title,
                   desc: _songs[index].artist,
                   icon: 'images/play.png',
-                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));},
+                  onPressed: () {
+                    try {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PlayPage(song: _songs[index])),
+                      );
+                    } catch (e) {
+                      print('Error navigating to PlayPage: $e');
+                    }
+                  },
                 );
               },
             ),

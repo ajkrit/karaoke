@@ -180,9 +180,7 @@ class _ListItemState extends State<ListItem> {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                    },
+                    onPressed: widget.onPressed,
                     icon: Image.asset(widget.icon),
                   )
                 ]

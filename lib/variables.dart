@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+String ip = "192.168.1.245";
+
+String drive_path = 'https://drive.google.com/uc?export=view&id=';
 
 List<String> greekGenres = [
   'Rock', 'Entechno', 'Rembetiko', 'Laiko'
@@ -40,6 +46,52 @@ List<String> handshakePhrases = [
   "Compete with honor, end with a handshake of sportsmanship.",
   "The essence of fair play—complete it with a handshake.",
 ];
+
+class Song {
+  final int id;
+  final String title;
+  final String artist;
+  final String genre;
+  final String lyrics;
+  final String sound_path;
+
+  Song({
+    required this.id,
+    required this.title,
+    required this.artist,
+    required this.genre,
+    required this.lyrics,
+    required this.sound_path,
+  });
+
+  factory Song.fromJson(Map<String, dynamic> json) {
+    return Song(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      artist: json['artist'] as String,
+      genre: json['genre'] as String,
+      lyrics: json['lyrics'] as String,
+      sound_path: json['sound_path'] as String,
+    );
+  }
+}
+
+Future<List<Song>> fetchSongs({String? id, String? language, String? genre}) async {
+  try {
+    final response = await http.get(Uri.parse(
+        'http://$ip:5000/api/getSongs?id=$id&language=$language&genre=$genre'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      final List<Song> songs = data.map((item) => Song.fromJson(item)).toList();
+      return songs;
+    } else {
+      throw Exception('Failed to load data. Status Code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error fetching songs: $e');
+    return [];
+  }
+}
 
 class AppColors {
   static const Color backgroundColor = Color(0xFFFDFBB9);

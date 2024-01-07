@@ -3,7 +3,7 @@ import 'package:karaoke/widgets.dart';
 import 'package:scratcher/scratcher.dart';
 import 'variables.dart';
 import 'package:intl/intl.dart';
-import 'songspage.dart';
+import 'playpage.dart';
 
 class SongOfDayPage extends StatefulWidget {
   @override
@@ -98,34 +98,37 @@ class _SongOfDayPageState extends State<SongOfDayPage> {
                           ),
                           SizedBox(height: 40.0),
                           Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Spacer(),
-                                Image.asset('images/The Band Standing Microphone.png'),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          _songs.isEmpty ? "Loading..." : _songs[_random].title,
-                                          style: AppStyles.listText,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        Text(
-                                          _songs.isEmpty ? "Loading..." : _songs[_random].artist,
-                                          style: AppStyles.listDesc,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ],
-                                    ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Image.asset('images/The Band Standing Microphone.png'),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _songs.isEmpty ? "Loading..." : _songs[_random].title,
+                                        style: AppStyles.listText,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      Text(
+                                        _songs.isEmpty ? "Loading..." : _songs[_random].artist,
+                                        style: AppStyles.listDesc,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
                                   ),
-                                Spacer(),
-                                IconButton(onPressed: () {}, icon: Image.asset('images/play-gold.png')),
-                              ],
+                                  IconButton(onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => PlayPage(song: _songs[_random])),
+                                    );
+                                  }, icon: Image.asset('images/play-gold.png')),
+                                ],
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
