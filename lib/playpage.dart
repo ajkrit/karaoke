@@ -152,7 +152,6 @@ class _PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: const MyAppBar(),
       body: _isLoading
           ? Center(
         child: CircularProgressIndicator(
@@ -224,27 +223,57 @@ class _PlayPageState extends State<PlayPage> {
               SizedBox(width: 25.0),
             ],
           ),
-          IconButton(
-            onPressed: () {
-              if (_finished) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              } else {
-                if (_isPlaying) {
-                  _audioPlayer.pause();
-                } else {
-                  _audioPlayer.resume();
-                }
-                setState(() {
-                  _isPlaying = !_isPlaying;
-                });
-              }
-            },
-            icon: Image.asset(
-              _finished ? 'images/ok.png' : (_isPlaying ? 'images/pause.png' : 'images/play.png'),
-              scale: 0.5,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Image.asset('images/back.png'),
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: () {
+                    if (_finished) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    } else {
+                      if (_isPlaying) {
+                        _audioPlayer.pause();
+                      } else {
+                        _audioPlayer.resume();
+                      }
+                      setState(() {
+                        _isPlaying = !_isPlaying;
+                      });
+                    }
+                  },
+                  icon: Image.asset(
+                    _finished
+                        ? 'images/ok.png'
+                        : (_isPlaying ? 'images/pause.png' : 'images/play.png'),
+                    scale: 0.5,
+                  ),
+                ),
+                Spacer(),
+                _finished
+                    ? Container(
+                  width: 24.0,
+                  height: 24.0,
+                )
+                    : IconButton(
+                  onPressed: () {
+                    _timer?.cancel();
+                    _audioPlayer.dispose();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  },
+                  icon: Image.asset('images/homepage.png'),
+                )
+              ],
             ),
           ),
           SizedBox(height: 20.0)
