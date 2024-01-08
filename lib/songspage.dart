@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'widgets.dart';
 import 'variables.dart';
 import 'playpage.dart';
+import 'dart:io';
 
 
 class SongsPage extends StatefulWidget {
@@ -37,6 +37,17 @@ class _SongsPageState extends State<SongsPage> {
     setState(() {
       _songs = songs;
     });
+  }
+
+  Future<void> _downloadSong(int index) async {
+    try {
+      var response = await http.get(Uri.parse('https://drive.google.com/uc?export=download&id=${_songs[index].sound_path}'));
+
+      var file = File('your_file_path.mp3');
+      await file.writeAsBytes(response.bodyBytes, flush: true);
+    } catch (e) {
+      print('Error downloading MP3 file: $e');
+    }
   }
 
 
@@ -80,6 +91,8 @@ class _SongsPageState extends State<SongsPage> {
                       print('Error navigating to PlayPage: $e');
                     }
                   },
+                  icon2: 'images/download.png',
+                  onPressed2: () => _downloadSong(index),
                 );
               },
             ),

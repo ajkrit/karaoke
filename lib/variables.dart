@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-String ip = "192.168.1.245";
+String ip = "147.102.200.253"; // "192.168.1.245";
 
 String drive_path = 'https://drive.google.com/uc?export=view&id=';
 

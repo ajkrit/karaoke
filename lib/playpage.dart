@@ -4,6 +4,8 @@ import 'package:karaoke/widgets.dart';
 import 'variables.dart';
 import 'homepage.dart';
 import 'dart:async';
+import 'package:vibration/vibration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Lyric {
@@ -90,6 +92,7 @@ class _PlayPageState extends State<PlayPage> {
   Duration _duration = Duration();
   Duration _position = Duration();
 
+
   void _startTimer() {
     const Duration checkInterval = Duration(milliseconds: 50);
 
@@ -106,6 +109,18 @@ class _PlayPageState extends State<PlayPage> {
   @override
   void initState() {
     super.initState();
+    _initPlayer();
+  }
+
+  void _initPlayer() async {
+    AudioPlayer cricketPlayer = AudioPlayer();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool vibrations = prefs.getBool('vibrations') ?? true;
+    bool sounds = prefs.getBool('sounds') ?? true;
+
+    if (sounds) cricketPlayer.play(AssetSource('/sounds/cricket.mp3'));
+
     _lyrics = parseLRC(widget.song.lyrics);
     _audioPlayer = AudioPlayer();
     _audioUrl = UrlSource('${drive_path}${widget.song.sound_path}');
@@ -133,8 +148,14 @@ class _PlayPageState extends State<PlayPage> {
       setState(() {
         _isPlaying = false;
         _finished = true;
+        if (vibrations) Vibration.vibrate(duration: 500);
       });
     });
+
+    if (sounds) cricketPlayer.stop();
+    cricketPlayer.dispose();
+
+    if (vibrations) Vibration.vibrate(duration: 500);
 
     _audioPlayer.play(_audioUrl);
 
@@ -227,7 +248,12 @@ class _PlayPageState extends State<PlayPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               children: [
-                IconButton(
+                _finished
+                    ? Container(
+                  width: 24.0,
+                  height: 24.0,
+                )
+                    : IconButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },

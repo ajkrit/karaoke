@@ -60,11 +60,11 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 15.0),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-              child: SwitchContainer(title: 'Sounds', description: 'Enables all sounds.', switchVal: 'sounds')
+              child: SwitchContainer(title: 'Sounds', description: 'Enables all sounds (except tracks).', switchVal: 'sounds')
             ),
             const Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
-                child: SwitchContainer(title: 'Notifications', description: 'Enables notifications.', switchVal: 'notifications')
+                child: SwitchContainer(title: 'Vibrations', description: 'Enables vibrations.', switchVal: 'vibrations')
             ),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),

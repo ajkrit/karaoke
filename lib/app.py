@@ -5,11 +5,13 @@ import shutil
 import mysql.connector
 from io import BytesIO
 
+ip = "147.102.239.188"
+
 app = Flask(__name__)
 CORS(app)
 
 db = mysql.connector.connect(
-    host="192.168.1.245",
+    host="localhost",
     user="flutter_user",
     password="",
     database="karaoke",
