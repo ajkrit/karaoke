@@ -50,6 +50,7 @@ dependencies:
   flutter_lyric: ^2.0.4+6
   io: ^1.0.4
   vibration: ^1.8.4
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

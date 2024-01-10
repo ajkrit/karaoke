@@ -6,6 +6,7 @@ import 'homepage.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 
 class Lyric {
@@ -157,7 +158,14 @@ class _PlayPageState extends State<PlayPage> {
 
     if (vibrations) Vibration.vibrate(duration: 500);
 
-    _audioPlayer.play(_audioUrl);
+    String? folderPath = prefs.getString('folderPath');
+    var file = File('$folderPath/${widget.song.sound_path}.mp3');
+
+    if (file.existsSync()) {
+      _audioPlayer.play(DeviceFileSource(file.path));
+    } else {
+      _audioPlayer.play(_audioUrl);
+    }
 
     _startTimer();
   }

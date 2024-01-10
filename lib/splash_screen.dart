@@ -21,11 +21,18 @@ class _SplashScreenState extends State<SplashScreen> {
   String username = '';
   String email = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loadedUsername = prefs.getString('username') ?? '';
     String loadedEmail = prefs.getString('email') ?? '';
-    double loadedScore = prefs.getDouble('score') ?? 0.0;
+
+    prefs.setInt('songsPlayed', 0);
 
     if (loadedUsername.isNotEmpty) {
       setState(() {
@@ -44,12 +51,16 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       Directory appDocumentsDirectory = await getApplicationDocumentsDirectory();
 
-      Directory appDataFolder = Directory('${appDocumentsDirectory.path}/karaoke');
+      String folderPath = '${appDocumentsDirectory.path}/karaoke';
+
+      prefs.setString('folderPath', folderPath);
+
+      Directory appDataFolder = Directory(folderPath);
       await appDataFolder.create(recursive: true);
 
-      print('AppData folder created at: ${appDataFolder.path}');
+      print('\n\n\n\nAppData folder created at: ${appDataFolder.path}\n\n\n\n');
     } catch (e) {
-      print('Error creating AppData folder: $e');
+      print('\n\n\n\nError creating AppData folder: $e\n\n\n\n');
     }
   }
 

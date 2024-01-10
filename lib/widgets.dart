@@ -168,11 +168,6 @@ class _ListItemState extends State<ListItem> {
         ),
         child: Row(
           children: [
-            if (widget.icon2 != null)
-              IconButton(
-                onPressed: widget.onPressed2,
-                icon: Image.asset(widget.icon2!),
-              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -186,6 +181,12 @@ class _ListItemState extends State<ListItem> {
                 ),
               ],
             ),
+            const Spacer(),
+            if (widget.icon2 != null)
+              IconButton(
+                onPressed: widget.onPressed2,
+                icon: Image.asset(widget.icon2!),
+              ),
             const Spacer(),
             IconButton(
               onPressed: widget.onPressed,
