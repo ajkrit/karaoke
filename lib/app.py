@@ -5,7 +5,6 @@ import shutil
 import mysql.connector
 from io import BytesIO
 
-ip = "147.102.239.188"
 
 app = Flask(__name__)
 CORS(app)

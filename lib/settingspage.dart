@@ -66,10 +66,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                 child: SwitchContainer(title: 'Vibrations', description: 'Enables vibrations.', switchVal: 'vibrations')
             ),
-            Padding(
+            /*Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                 child: DropDownContainer(title: 'Pitch', description: 'Change pitch.', switchVal: 'pitch', dropdownItems: pitchList,)
-            )
+            )*/
           ],
         ),
       ),

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-String ip = /* "147.102.200.253"; */ "192.168.1.245";
+String ip = '192.168.42.187';/* "147.102.200.253"; "192.168.1.245";*/
 
 String drive_path = 'https://drive.google.com/uc?export=view&id=';
 
@@ -98,7 +98,7 @@ Future<List<Song>> fetchSongs({String? id, String? language, String? genre}) asy
     }
   } catch (e) {
     print('Error fetching songs from database: $e');
-    return _loadSongsFromFiles();
+    return [];
   }
 }
 
@@ -165,7 +165,7 @@ class AppColors {
 class AppStyles {
   static const TextStyle mainButtonText = TextStyle(
     fontFamily: 'Inter',
-    fontSize: 20.0,
+    fontSize: 16.0,
     fontWeight: FontWeight.bold,
     color: Colors.black,
   );

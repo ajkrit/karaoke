@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:karaoke/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'variables.dart';
 import 'homepage.dart';
 import 'dart:async';
 import 'package:vibration/vibration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
+import 'package:camera/camera.dart';
+import 'package:record/record.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:gal/gal.dart';
+import 'dart:core';
+import 'package:flutter/services.dart';
+import 'package:sensors/sensors.dart';
+import 'dart:math';
 
 
 class Lyric {
@@ -70,19 +80,25 @@ String _formatDuration(Duration duration) {
 
 class PlayPage extends StatefulWidget {
   final Song song;
+  final bool handshake;
 
-  const PlayPage({Key? key, required this.song}) : super(key: key);
+  const PlayPage({Key? key, required this.song, this.handshake = false}) : super(key: key);
 
   @override
   State<PlayPage> createState() => _PlayPageState();
 }
 
 class _PlayPageState extends State<PlayPage> {
+  late CameraController _cameraController;
   late AudioPlayer _audioPlayer;
+  late AudioRecorder _audioRecord;
   late Source _audioUrl;
   late String _positionText = '';
   late String _durationText;
   late int _currentLine;
+  late Duration _recordStartTime;
+  late Duration _recordStopTime;
+  late bool handshake = widget.handshake;
 
   Timer? _timer;
   List<Lyric> _lyrics = [];
@@ -90,6 +106,7 @@ class _PlayPageState extends State<PlayPage> {
   bool _isPlaying = false;
   bool _isLoading = true;
   bool _finished = false;
+  bool _isRecording = false;
   Duration _duration = Duration();
   Duration _position = Duration();
 
@@ -111,7 +128,133 @@ class _PlayPageState extends State<PlayPage> {
   void initState() {
     super.initState();
     _initPlayer();
+    _initCamera();
+    _audioRecord = AudioRecorder();
   }
+
+
+  Future<void> _initCamera() async {
+    List<CameraDescription> cameras = await availableCameras();
+
+    CameraDescription selectedCamera = cameras.firstWhere(
+          (camera) => camera.lensDirection == CameraLensDirection.front,
+      orElse: () => cameras.first,
+    );
+
+    _cameraController = CameraController(selectedCamera, ResolutionPreset.medium);
+    await _cameraController.initialize();
+    setState(() {});
+  }
+
+  Future<void> _startRecording() async {
+    if (!_isRecording) {
+      if (await Permission.camera.request().isGranted &&
+          await Permission.microphone.request().isGranted) {
+
+        Directory appCacheDir = await getApplicationCacheDirectory();
+        String folderPath = appCacheDir.path;
+        String filePath = '$folderPath/audio_recording.wav';
+
+        RecordConfig config = RecordConfig();
+
+        await _cameraController.startVideoRecording();
+        await _audioRecord.start(config, path: filePath);
+
+        _recordStartTime = _position;
+
+        setState(() {
+          _isRecording = true;
+        });
+      }
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    if (_isRecording) {
+      _recordStopTime = _position;
+
+      print("\n\n\n\nSTOPPING\n\n\n\n");
+
+      XFile videoFile = await _cameraController.stopVideoRecording();
+      await _audioRecord.stop();
+
+      print('\n\n\n\n\n\n\n\nVideo recorded at: ${videoFile.path}\n\n\n\n\n\n\n\n');
+
+      Directory appCacheDir = await getApplicationCacheDirectory();
+      String folderPath = appCacheDir.path;
+      String audioPath = '$folderPath/audio_recording.wav';
+
+      print('\n\n\n\n\n\n\n\nAudio recorded at: ${audioPath}\n\n\n\n\n\n\n\n');
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? videosPath = await prefs.getString('videosPath');
+      //String mp3Path = '$folderPath/karaoke/${widget.song.sound_path}.mp3';
+
+      String timestamp = DateTime.now().toIso8601String().replaceAll(':', '');
+      String videoFileName = '$videosPath/$timestamp.mp4';
+      String audioFileName = '$videosPath/$timestamp.wav';
+
+
+      try {
+        await File(videoFile.path).rename(videoFileName);
+
+        await File(audioPath).rename(audioFileName);
+
+        print('\n\n\nSUCCESS\n\n\n');
+      }
+      catch (e) {
+        print('\n\n\nERROR\n\n\n');
+      }
+
+      //String outputPath = await mergeVideoAndAudio(videoPath, filePath, mp3Path);
+
+      setState(() {
+        _isRecording = false;
+      });
+    }
+  }
+
+  Future<String> mergeVideoAndAudio(String videoPath, String audioPath, String mp3Path) async {
+    print("\n\n\n\nMERGING\n\n\n\n\n");
+    final FlutterFFmpeg flutterFFmpeg = FlutterFFmpeg();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? videosPath = prefs.getString('videosPath');
+
+    Directory tempDir = await getTemporaryDirectory();
+    String tempAudioPath = '${tempDir.path}/audio_recording.wav';
+    String tempSongPath = '${tempDir.path}/song.wav';
+
+    int startMillis = _recordStartTime.inMilliseconds;
+    int stopMillis = _recordStopTime.inMilliseconds;
+    print('$startMillis \n\n\n\n $stopMillis');
+
+    /*String extractCommand =
+        '-i $mp3Path -ss ${startMillis / 1000} -to ${stopMillis / 1000} -c copy $tempSongPath';
+    int extractResult = await flutterFFmpeg.execute(extractCommand);
+
+    if (extractResult != 0) {
+      print('Failed to extract portion from MP3 file');
+      return '';
+    }*/
+
+    String timestamp = DateTime.now().toIso8601String().replaceAll(':', '');
+
+    String outputPath = '$videosPath/$timestamp.mp4';
+
+    String mergeCommand = '-i $videoPath -i $tempAudioPath -c:v copy -c:a aac -strict experimental $outputPath';
+    int mergeResult = await flutterFFmpeg.execute(mergeCommand);
+
+    if (mergeResult == 0) {
+      print('\n\n\n\nVideo and audio merged successfully\n\n\n\n\n');
+      print(outputPath);
+      return outputPath;
+    } else {
+      print('Failed to merge video and audio');
+      return '';
+    }
+  }
+
 
   void _initPlayer() async {
     AudioPlayer cricketPlayer = AudioPlayer();
@@ -120,7 +263,17 @@ class _PlayPageState extends State<PlayPage> {
     bool vibrations = prefs.getBool('vibrations') ?? true;
     bool sounds = prefs.getBool('sounds') ?? true;
 
-    if (sounds) cricketPlayer.play(AssetSource('/sounds/cricket.mp3'));
+
+    if (sounds) {
+      String audioAsset = "sounds/cricket.mp3";
+
+      Uint8List soundBytes = (await rootBundle.load(audioAsset)).buffer.asUint8List();
+
+      await cricketPlayer.play(
+        BytesSource(Uint8List.fromList(soundBytes)),
+      );
+      print("\n\n\n\nCRICKET\n\n\n\n");
+    }
 
     _lyrics = parseLRC(widget.song.lyrics);
     _audioPlayer = AudioPlayer();
@@ -140,6 +293,7 @@ class _PlayPageState extends State<PlayPage> {
 
     _audioPlayer.onPositionChanged.listen((Duration position) {
       setState(() {
+        if (sounds) {cricketPlayer.stop();}
         _position = position;
         _positionText = _formatDuration(position);
       });
@@ -153,19 +307,21 @@ class _PlayPageState extends State<PlayPage> {
       });
     });
 
-    if (sounds) cricketPlayer.stop();
-    cricketPlayer.dispose();
-
     if (vibrations) Vibration.vibrate(duration: 500);
 
     String? folderPath = prefs.getString('folderPath');
     var file = File('$folderPath/${widget.song.sound_path}.mp3');
+    print(file);
 
     if (file.existsSync()) {
+      print("\n\n\n\nPlaying locally...\n\n\n\n");
       _audioPlayer.play(DeviceFileSource(file.path));
     } else {
+      print("\n\n\n\nPlaying from URL...\n\n\n\n");
       _audioPlayer.play(_audioUrl);
     }
+
+    await _audioPlayer.pause();
 
     _startTimer();
   }
@@ -173,6 +329,7 @@ class _PlayPageState extends State<PlayPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _cameraController.dispose();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -271,10 +428,18 @@ class _PlayPageState extends State<PlayPage> {
                 IconButton(
                   onPressed: () {
                     if (_finished) {
-                      Navigator.push(
+                      if (!handshake) {Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
-                      );
+                      );}
+                      else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ShakePopup();
+                          },
+                        );
+                      }
                     } else {
                       if (_isPlaying) {
                         _audioPlayer.pause();
@@ -301,11 +466,10 @@ class _PlayPageState extends State<PlayPage> {
                 )
                     : IconButton(
                   onPressed: () {
-                    _timer?.cancel();
-                    _audioPlayer.dispose();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                    if (!_isRecording) {_startRecording();}
+                    else {_stopRecording();}
                   },
-                  icon: Image.asset('images/homepage.png'),
+                  icon: Image.asset(!_isRecording ? 'images/camera-photo.png' : 'images/save.png'),
                 )
               ],
             ),
@@ -314,5 +478,74 @@ class _PlayPageState extends State<PlayPage> {
         ],
       ),
     );
+  }
+}
+
+
+
+class ShakePopup extends StatefulWidget {
+
+  @override
+  _ShakePopupState createState() => _ShakePopupState();
+}
+
+class _ShakePopupState extends State<ShakePopup> {
+  late bool _vibrations;
+  final shakeThreshold = 10.0;
+  int cnt = 0;
+  late StreamSubscription<AccelerometerEvent> accelerometerSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    startShakeDetection();
+  }
+
+  void startShakeDetection() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _vibrations = prefs.getBool('vibrations') ?? true;
+
+    accelerometerSubscription = accelerometerEvents.listen((event) {
+      final delta = event.x;
+      if (delta.abs() > shakeThreshold) {
+        print("Shake detected!");
+        cnt += 1;
+        if (cnt == 5) {
+          stopShakeDetection();
+          if (_vibrations) Vibration.vibrate(duration: 500);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        }
+      }
+    });
+  }
+
+  void stopShakeDetection() {
+    accelerometerSubscription.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AlertDialog(
+            title: Text("${handshakePhrases[Random().nextInt(handshakePhrases.length)]}", style: AppStyles.scoreText),
+          ),
+          SizedBox(height: 40.0),
+          AlertDialog(
+            icon: Image.asset('images/shake.png'),
+            title: Text("Shake your phone", style: AppStyles.backgroundText),
+          )
+        ]
+    );
+  }
+
+  @override
+  void dispose() {
+    stopShakeDetection();
+    super.dispose();
   }
 }

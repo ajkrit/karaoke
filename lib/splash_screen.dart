@@ -59,8 +59,16 @@ class _SplashScreenState extends State<SplashScreen> {
       await appDataFolder.create(recursive: true);
 
       print('\n\n\n\nAppData folder created at: ${appDataFolder.path}\n\n\n\n');
+
+      String videosPath = '${appDocumentsDirectory.path}/videos';
+      prefs.setString('videosPath', videosPath );
+
+      Directory videosFolder = Directory(videosPath);
+      await videosFolder.create(recursive: true);
+
+      print('\n\n\n\nVideo folder created at: ${videosFolder.path}\n\n\n\n');
     } catch (e) {
-      print('\n\n\n\nError creating AppData folder: $e\n\n\n\n');
+      print('\n\n\n\nError creating folders: $e\n\n\n\n');
     }
   }
 

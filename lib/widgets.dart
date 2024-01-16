@@ -15,6 +15,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
+      color: AppColors.whiteColor,
+      elevation: 0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -83,15 +85,15 @@ class SquareButton extends StatefulWidget {
   final String icon;
   final String label;
 
-  const SquareButton({super.key,
+  const SquareButton({
+    Key? key,
     required this.onPressed,
     required this.icon,
     required this.label,
-  });
+  }) : super(key: key);
 
   @override
   _SquareButtonState createState() => _SquareButtonState();
-
 }
 
 class _SquareButtonState extends State<SquareButton> {
@@ -99,38 +101,57 @@ class _SquareButtonState extends State<SquareButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: widget.onPressed,
-      style: ElevatedButton.styleFrom(
-        elevation: isPressed ? 0 : 8,
-        fixedSize: const Size(10, 10),
-        backgroundColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          isPressed = true;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          isPressed = false;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          isPressed = false;
+        });
+      },
+      child: ElevatedButton(
+        onPressed: widget.onPressed,
+        style: ElevatedButton.styleFrom(
+          elevation: isPressed ? 0 : 0, // 0 elevation when pressed, 8 when not pressed
+          fixedSize: const Size(10, 10),
+          backgroundColor: AppColors.whiteColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 14.0),
-            child: Image.asset(
-              widget.icon,
-              scale: 0.5,
-              width: 100.0, // Adjust width as needed
-              height: 100.0, // Adjust height as needed
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 14.0),
+              child: Image.asset(
+                widget.icon,
+                scale: 0.5,
+                width: 100.0,
+                height: 100.0,
+              ),
             ),
-          ),
-          const SizedBox(width: 15.0), // Add spacing between icon and text
-          Text(
+            const SizedBox(width: 15.0), // Add spacing between icon and text
+            Text(
               widget.label,
-              style: AppStyles.mainButtonText
-          ),
-        ],
+              style: AppStyles.mainButtonText,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
+
 
 
 class ListItem extends StatefulWidget {
@@ -138,8 +159,10 @@ class ListItem extends StatefulWidget {
   final String desc;
   final String icon;
   final String? icon2;
+  final String? icon3;
   final VoidCallback onPressed;
   final VoidCallback? onPressed2;
+  final VoidCallback? onPressed3;
 
   const ListItem({
     Key? key,
@@ -149,6 +172,8 @@ class ListItem extends StatefulWidget {
     required this.onPressed,
     this.icon2,
     this.onPressed2,
+    this.icon3,
+    this.onPressed3,
   }) : super(key: key);
 
   @override
@@ -186,6 +211,12 @@ class _ListItemState extends State<ListItem> {
               IconButton(
                 onPressed: widget.onPressed2,
                 icon: Image.asset(widget.icon2!),
+              ),
+            const Spacer(),
+            if(widget.icon3 != null)
+              IconButton(
+                onPressed: widget.onPressed3,
+                icon: Image.asset(widget.icon3!),
               ),
             const Spacer(),
             IconButton(

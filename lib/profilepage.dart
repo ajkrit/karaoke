@@ -17,6 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String username = '';
   String email = '';
   double score = 0.0;
+  bool isEditingUsername = false;
+  bool isEditingEmail = false;
 
   @override
   void initState() {
@@ -53,7 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setString('email', email);
-
   }
 
   @override
@@ -105,12 +106,22 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 setState(() {
                                   username = _usernameController.text;
+                                  isEditingUsername = false;
                                 });
                                 _saveUserData();
                               },
-                              icon: Image.asset('images/edit.png'),
+                              icon: Image.asset(
+                                isEditingUsername
+                                    ? 'images/ok.png' // Change this to your desired icon
+                                    : 'images/edit.png',
+                              ),
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              isEditingUsername = true;
+                            });
+                          },
                         ),
                         const Text(
                           'Username',
@@ -122,7 +133,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
@@ -139,12 +151,22 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 setState(() {
                                   email = _emailController.text;
+                                  isEditingEmail = false;
                                 });
                                 _saveUserData();
                               },
-                              icon: Image.asset('images/edit.png'),
+                              icon: Image.asset(
+                                isEditingEmail
+                                    ? 'images/foo.png' // Change this to your desired icon
+                                    : 'images/edit.png',
+                              ),
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              isEditingEmail = true;
+                            });
+                          },
                         ),
                         const Text(
                           'E-mail',
@@ -155,6 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+                /*
                 Container(
                   width: 150.0,
                   height: 150.0,
@@ -179,6 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 )
+                      */
               ],
             )
           ],
