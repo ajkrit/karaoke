@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:karaoke/playpage.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'widgets.dart';
 import 'variables.dart';
 import 'profilepage.dart';
@@ -92,7 +95,22 @@ class _HomePageState extends State<HomePage> {
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SongOfDayPage()));}, icon: 'images/cup.png', label: 'Song of Day'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => GenrePage()));}, icon: 'images/mic.png', label: 'Songs'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LibraryPage()));}, icon: 'images/favorites.png', label: 'Library'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ScanQR()));}, icon: 'images/qr-scan.png', label: 'Scan Qr')
+                      SquareButton(onPressed: () async {
+                        var status = await Permission.camera.request();
+                        if (status.isGranted){
+                          var codeSanner = (await BarcodeScanner
+                              .scan()); //barcode scanner
+                          if (codeSanner != null && codeSanner.rawContent.isNotEmpty) {
+                            var songid = codeSanner.rawContent;
+                            var scannedSong = await fetchSongs(
+                                id: songid, language: "", genre: "");
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) =>
+                                    PlayPage(song: scannedSong[0])));
+                          }
+                          };
+                        },
+                          icon: 'images/qr-scan.png', label: 'Scan Qr')
                     ],
                   ),
                 )

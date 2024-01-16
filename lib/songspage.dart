@@ -6,6 +6,7 @@ import 'variables.dart';
 import 'playpage.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'generateQRcode.dart';
 import 'variables.dart';
 
 class SongsPage extends StatefulWidget {
@@ -73,6 +74,7 @@ class _SongsPageState extends State<SongsPage> {
       await jsonFile.writeAsString(jsonEncode(songInfo), flush: true);
 
       print('\n\n\n\nDownloaded/Updated MP3 file\n\n\n\n');
+      print("\n\n\n\nFile at: ${folderPath}/${_songs[index].sound_path}.mp3\n\n\n\n");
       return ret;
     } catch (e) {
       print('\n\n\n\nError downloading MP3 file: $e\n\n\n\n');
@@ -122,6 +124,13 @@ class _SongsPageState extends State<SongsPage> {
                   },
                   icon2: 'images/download.png',
                   onPressed2: () => _downloadSong(index),
+                  icon3: 'images/qr-code-small.png',
+                  onPressed3: () =>{
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GenerateQR(song: _songs[index])),
+                  )
+                  },
                 );
               },
             ),
