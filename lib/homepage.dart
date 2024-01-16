@@ -5,7 +5,7 @@ import 'profilepage.dart';
 import 'settingspage.dart';
 import 'songofdaypage.dart';
 import 'genrepage.dart';
-import 'challengepage.dart';
+import 'scanQRcode.dart';
 import 'librarypage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SongOfDayPage()));}, icon: 'images/cup.png', label: 'Song of Day'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => GenrePage()));}, icon: 'images/mic.png', label: 'Songs'),
                       SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => LibraryPage()));}, icon: 'images/favorites.png', label: 'Library'),
-                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengePage()));}, icon: 'images/duel-large.png', label: 'Challenge')
+                      SquareButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => ScanQR()));}, icon: 'images/qr-scan.png', label: 'Scan Qr')
                     ],
                   ),
                 )
