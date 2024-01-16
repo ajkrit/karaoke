@@ -1,0 +1,77 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run
+
+## exception
+
+_TypeError: Null check operator used on a null value
+
+```
+#0      HotRunner._updateDevFS (package:flutter_tools/src/run_hot.dart:486:48)
+#1      HotRunner._restartFromSources (package:flutter_tools/src/run_hot.dart:599:28)
+#2      HotRunner._fullRestartHelper (package:flutter_tools/src/run_hot.dart:812:22)
+<asynchronous suspension>
+#3      HotRunner.restart (package:flutter_tools/src/run_hot.dart:752:38)
+<asynchronous suspension>
+#4      TerminalHandler._commonTerminalInputHandler (package:flutter_tools/src/resident_runner.dart:1790:40)
+<asynchronous suspension>
+#5      TerminalHandler.processTerminalInput (package:flutter_tools/src/resident_runner.dart:1830:7)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.16.6, on Microsoft Windows [Version 10.0.19045.3930], locale el-GR)
+    [32m•[39m Flutter version 3.16.6 on channel stable at C:\Users\ankri\flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision 46787ee49c (6 days ago), 2024-01-09 14:36:07 -0800
+    [32m•[39m Engine revision 3f3e560236
+    [32m•[39m Dart version 3.2.3
+    [32m•[39m DevTools version 2.28.4
+
+[32m[✓][39m Windows Version (Installed version of Windows is version 10 or higher)
+
+[33m[!][39m Android toolchain - develop for Android devices (Android SDK version 34.0.0)
+    [32m•[39m Android SDK at C:\Users\ankri\AppData\Local\Android\sdk
+    [31m✗[39m cmdline-tools component is missing
+      Run `path/to/sdkmanager --install "cmdline-tools;latest"`
+      See https://developer.android.com/studio/command-line for more details.
+    [31m✗[39m Android license status unknown.
+      Run `flutter doctor --android-licenses` to accept the SDK licenses.
+      See https://flutter.dev/docs/get-started/install/windows#android-setup for more details.
+
+[32m[✓][39m Chrome - develop for the web
+    [32m•[39m Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[31m[✗][39m Visual Studio - develop Windows apps
+    [31m✗[39m Visual Studio not installed; this is necessary to develop Windows apps.
+      Download at https://visualstudio.microsoft.com/downloads/.
+      Please install the "Desktop development with C++" workload, including all of its default components
+
+[32m[✓][39m Android Studio (version 2022.3)
+    [32m•[39m Android Studio at C:\Program Files\Android\Android Studio
+    [32m•[39m Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    [32m•[39m Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    [32m•[39m Java version OpenJDK Runtime Environment (build 17.0.6+0-b2043.56-10027231)
+
+[32m[✓][39m VS Code (version 1.86.0-insider)
+    [32m•[39m VS Code at C:\Users\ankri\AppData\Local\Programs\Microsoft VS Code Insiders
+    [32m•[39m Flutter extension version 3.81.20231227
+
+[32m[✓][39m Connected device (4 available)
+    [32m•[39m SM A715F (mobile) • R58N60G5SLV • android-arm64  • Android 13 (API 33)
+    [32m•[39m Windows (desktop) • windows     • windows-x64    • Microsoft Windows [Version 10.0.19045.3930]
+    [32m•[39m Chrome (web)      • chrome      • web-javascript • Google Chrome 120.0.6099.216
+    [32m•[39m Edge (web)        • edge        • web-javascript • Microsoft Edge 120.0.2210.133
+
+[32m[✓][39m Network resources
+    [32m•[39m All expected network resources are available.
+
+[33m![39m Doctor found issues in 2 categories.
+```
