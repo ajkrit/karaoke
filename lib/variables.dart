@@ -5,8 +5,9 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-
-String ip = '192.168.42.187';/* "147.102.200.253"; "192.168.1.245";*/
+String ip1 = '192.168.1.245';
+String ip2 = '192.168.42.187';
+String ip = ip1;
 
 String drive_path = 'https://drive.google.com/uc?export=view&id=';
 

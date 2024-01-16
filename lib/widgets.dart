@@ -30,7 +30,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             icon: Image.asset('images/homepage.png'),
-            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));},
+            onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));},
           ),
           IconButton(
             icon: Image.asset('images/settings.png'),

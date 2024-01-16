@@ -75,6 +75,24 @@ class _SongsPageState extends State<SongsPage> {
 
       print('\n\n\n\nDownloaded/Updated MP3 file\n\n\n\n');
       print("\n\n\n\nFile at: ${folderPath}/${_songs[index].sound_path}.mp3\n\n\n\n");
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Download successful', style: AppStyles.scoreText),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+
       return ret;
     } catch (e) {
       print('\n\n\n\nError downloading MP3 file: $e\n\n\n\n');

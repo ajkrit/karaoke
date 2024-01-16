@@ -18,6 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  bool isEditingUsername = false;
+  bool isEditingEmail = false;
+
   String username = '';
   String email = '';
 
@@ -111,12 +114,22 @@ class _SplashScreenState extends State<SplashScreen> {
                               onPressed: () {
                                 setState(() {
                                   username = _usernameController.text;
+                                  isEditingUsername = false;
                                 });
                                 _saveUserData();
                               },
-                              icon: Image.asset('images/edit.png'),
+                              icon: Image.asset(
+                                isEditingUsername
+                                    ? 'images/ok.png'
+                                    : 'images/edit.png',
+                              ),
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              isEditingUsername = true;
+                            });
+                          },
                         ),
                         const Text(
                           'Username',
@@ -128,7 +141,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
@@ -145,17 +159,27 @@ class _SplashScreenState extends State<SplashScreen> {
                               onPressed: () {
                                 setState(() {
                                   email = _emailController.text;
+                                  isEditingEmail = false;
                                 });
                                 _saveUserData();
                               },
-                              icon: Image.asset('images/edit.png'),
+                              icon: Image.asset(
+                                isEditingEmail
+                                    ? 'images/ok.png'
+                                    : 'images/edit.png',
+                              ),
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              isEditingEmail = true;
+                            });
+                          },
                         ),
                         const Text(
                           'E-mail',
                           style: AppStyles.listDesc,
-                        ),
+                        )
                       ],
                     ),
                   ),

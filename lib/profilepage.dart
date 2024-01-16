@@ -112,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               },
                               icon: Image.asset(
                                 isEditingUsername
-                                    ? 'images/ok.png' // Change this to your desired icon
+                                    ? 'images/ok.png'
                                     : 'images/edit.png',
                               ),
                             ),
@@ -157,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               },
                               icon: Image.asset(
                                 isEditingEmail
-                                    ? 'images/foo.png' // Change this to your desired icon
+                                    ? 'images/ok.png'
                                     : 'images/edit.png',
                               ),
                             ),

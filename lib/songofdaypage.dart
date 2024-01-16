@@ -119,12 +119,15 @@ class _SongOfDayPageState extends State<SongOfDayPage> {
                                       ),
                                     ],
                                   ),
+                                  !_songs.isEmpty ?
                                   IconButton(onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) => PlayPage(song: _songs[_random])),
                                     );
-                                  }, icon: Image.asset('images/play-gold.png')),
+                                  }, icon: Image.asset('images/play-gold.png')
+                                  )
+                                  : Container()
                                 ],
                               ),
                             ),

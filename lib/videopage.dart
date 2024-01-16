@@ -49,10 +49,8 @@ class _VideoPageState extends State<VideoPage> {
   Future<void> _DeleteVideo(int index) async {
     String videoPath = _controllers[index].dataSource!;
 
-    // Dispose of the VideoPlayerController before removing it
     await _controllers[index].dispose();
 
-    // Remove the VideoPlayerController from the list
     _controllers.removeAt(index);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();

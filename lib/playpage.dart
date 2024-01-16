@@ -198,7 +198,7 @@ class _PlayPageState extends State<PlayPage> {
       try {
         await File(videoFile.path).rename(videoFileName);
 
-        await File(audioPath).rename(audioFileName);
+        //await File(audioPath).rename(audioFileName);
 
         print('\n\n\nSUCCESS\n\n\n');
       }
@@ -428,7 +428,7 @@ class _PlayPageState extends State<PlayPage> {
                 IconButton(
                   onPressed: () {
                     if (_finished) {
-                      if (!handshake) {Navigator.push(
+                      if (!handshake) {Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
                       );}
@@ -513,7 +513,7 @@ class _ShakePopupState extends State<ShakePopup> {
         if (cnt == 5) {
           stopShakeDetection();
           if (_vibrations) Vibration.vibrate(duration: 500);
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
           );
