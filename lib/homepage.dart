@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const Text(
-              'Karaoke',
+              'Melodizz',
               style: TextStyle(
                 fontFamily: 'Lexend',
                 fontSize: 40,
