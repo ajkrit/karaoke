@@ -99,6 +99,7 @@ class _PlayPageState extends State<PlayPage> {
   late Duration _recordStartTime;
   late Duration _recordStopTime;
   late bool handshake = widget.handshake;
+  late AudioPlayer cricketPlayer;
 
   Timer? _timer;
   List<Lyric> _lyrics = [];
@@ -197,9 +198,7 @@ class _PlayPageState extends State<PlayPage> {
 
       try {
         await File(videoFile.path).rename(videoFileName);
-
-        //await File(audioPath).rename(audioFileName);
-
+        print(videoFileName);
         print('\n\n\nSUCCESS\n\n\n');
       }
       catch (e) {
@@ -257,7 +256,7 @@ class _PlayPageState extends State<PlayPage> {
 
 
   void _initPlayer() async {
-    AudioPlayer cricketPlayer = AudioPlayer();
+    cricketPlayer = AudioPlayer();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool vibrations = prefs.getBool('vibrations') ?? true;
@@ -331,6 +330,7 @@ class _PlayPageState extends State<PlayPage> {
     _timer?.cancel();
     _cameraController.dispose();
     _audioPlayer.dispose();
+    cricketPlayer.dispose();
     super.dispose();
   }
 

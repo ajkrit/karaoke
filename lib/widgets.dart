@@ -193,18 +193,25 @@ class _ListItemState extends State<ListItem> {
         ),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.text,
-                  style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child:
+              Container(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.text,
+                      style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      widget.desc,
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  ],
                 ),
-                Text(
-                  widget.desc,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-              ],
+              ),
             ),
             const Spacer(),
             if (widget.icon2 != null)

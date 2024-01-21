@@ -13,7 +13,7 @@ class VideoPage extends StatefulWidget {
 }
 
 class _VideoPageState extends State<VideoPage> {
-  late List<VideoPlayerController> _controllers;
+  late List<VideoPlayerController> _controllers = [];
   late bool _vibrations = true;
 
   @override
@@ -31,8 +31,9 @@ class _VideoPageState extends State<VideoPage> {
     if (videosDir.existsSync()) {
       List<FileSystemEntity> videoFiles = videosDir.listSync();
 
-      // Sort videoFiles based on the last modified time in descending order
       videoFiles.sort((a, b) => b.statSync().modified.compareTo(a.statSync().modified));
+
+      _controllers = [];
 
       _controllers = videoFiles.map((file) {
         return VideoPlayerController.file(File(file.path))..initialize();
@@ -46,23 +47,40 @@ class _VideoPageState extends State<VideoPage> {
   }
 
 
+
   Future<void> _DeleteVideo(int index) async {
     String videoPath = _controllers[index].dataSource!;
+    print('Video Path: $videoPath');
+    print('Controllers Length Before Removal: ${_controllers.length}');
 
-    await _controllers[index].dispose();
+    //await _controllers[index].dispose();
 
     _controllers.removeAt(index);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String videosPath = prefs.getString('videosPath') ?? '';
+    print('Controllers Length After Removal: ${_controllers.length}');
+
+    videoPath = videoPath.replaceFirst('file://', '');
+
     File videoFile = File(videoPath);
+    print('Video File: $videoFile');
 
     if (videoFile.existsSync()) {
-      await videoFile.delete();
+      print('File Exists. Attempting to delete...');
+      try {
+        await videoFile.delete();
+        print('File Deleted Successfully');
+      } catch (e) {
+        print('Error Deleting File: $e');
+      }
+    } else {
+      print('File does not exist: $videoPath');
     }
 
     setState(() {});
   }
+
+
+
 
 
   Future<void> _loadVibrations() async {
@@ -116,15 +134,15 @@ class _VideoPageState extends State<VideoPage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Cancel', style: AppStyles.listText),
             ),
-            TextButton(
-              onPressed: () async {
-                await _DeleteVideo(index);
-                Navigator.of(context).pop(); // Close the dialog
-              },
+            TextButton(onPressed: () async {
+              await _controllers[index].dispose();
+              await _DeleteVideo(index);
+              Navigator.of(context).pop();
+            },
               child: Text('Delete', style: AppStyles.listText),
             ),
           ],
